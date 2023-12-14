@@ -1,0 +1,25 @@
+<div class="container-fluid">
+
+<app-finish *ngIf="results?.length == 15" [results]="results"></app-finish>
+
+<div *ngIf="form!">
+<div *ngIf="form.Items[0]">
+<div *ngFor="let element of form.Items[0].Elements">
+	<div class="labels" *ngIf="element.Map == null" [innerHTML]="element.Description"></div>
+	
+	<div *ngIf="element.Map">
+		<ul class="maps">
+		<li *ngFor="let map of element.Map"
+		  [class.selected]="map === selectedMap"
+		  (click)="onSelect(map)" >
+		 	<p [ngStyle]= "{'color': '.bg-transparent' ? '#370578' : 'F0EDF2'}" >{{map!.Description}}</p>
+		</li>
+		</ul>
+	</div>
+	
+</div>
+<p>
+</p>
+</div>
+</div>
+</div>

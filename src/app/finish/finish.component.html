@@ -1,0 +1,133 @@
+<button (click)="downloadAsPdf()">Generate PDF</button>
+
+<div  class="container-fluid">
+
+
+<div  style="text-align:left">
+<h2>Results</h2>
+<div #dataToExport  *ngIf="results">
+
+    <div>
+    <div style="display: block">
+      <canvas  id="myChartCanvas" baseChart
+        [datasets]="radarChartData"
+        [options]="radarChartOptions"
+        [labels]="radarChartLabels"
+        [type]="'radar'">
+      </canvas>
+    </div>
+  </div>
+
+
+  <div *ngIf="QOL">
+    <label >Quality of Life</label>  : <label *ngIf="!isNaN(QOL.Theta)">{{QOL.Theta}} +/- {{QOL.StdError}}</label><label *ngIf="isNaN(QOL.Theta)">No score available</label>    
+  </div>
+
+  <div *ngIf="Fatigue">
+    <label >Fatigue</label>  : <label *ngIf="!isNaN(Fatigue.Theta)">{{Fatigue.Theta}} +/- {{Fatigue.StdError}}</label><label *ngIf="isNaN(Fatigue.Theta)">No score available</label>    
+  </div>
+
+  <div *ngIf="Pain">
+    <label >Pain</label>  : <label *ngIf="!isNaN(Pain.Theta)">{{Pain.Theta}} +/- {{Pain.StdError}}</label><label *ngIf="isNaN(Pain.Theta)">No score available</label>    
+  </div>
+
+  <div *ngIf="Bladder">
+    <label >Bladder</label>  : <label *ngIf="!isNaN(Bladder.Theta)">{{Bladder.Theta}} +/- {{Bladder.StdError}}</label><label *ngIf="isNaN(Bladder.Theta)">No score available</label>    
+  </div>
+
+  <div *ngIf="Depression">
+    <label >Depression</label>  : <label *ngIf="!isNaN(Depression.Theta)">{{Depression.Theta}} +/- {{Depression.StdError}}</label><label *ngIf="isNaN(Depression.Theta)">No score available</label>    
+  </div>
+
+  <div *ngIf="Cognition">
+    <label >Cognition</label>  : <label *ngIf="!isNaN(Cognition.Theta)">{{Cognition.Theta}} +/- {{Cognition.StdError}}</label><label *ngIf="isNaN(Cognition.Theta)">No score available</label>    
+  </div>
+
+  <div *ngIf="Social">
+    <label >Social</label>  : <label *ngIf="!isNaN(Social.Theta)">{{Social.Theta}} +/- {{Social.StdError}}</label><label *ngIf="isNaN(Social.Theta)">No score available</label>    
+  </div>
+
+  <div *ngIf="Mobility">
+    <label >Mobility</label>  : <label *ngIf="!isNaN(Mobility.Theta)">{{Mobility.Theta}} +/- {{Mobility.StdError}}</label><label *ngIf="isNaN(Mobility.Theta)">No score available</label>    
+  </div>
+
+
+<div type="labels" *ngFor="let result of results">
+  <!--
+  <div *ngIf="result.Form == 'MS_PRO_QOL'">
+    <label >Quality of Life</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>    
+  </div>
+  <div *ngIf="result.Form == 'MS_PRO_Fatigue'">
+  	<label >Fatigue</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>		
+  </div>
+
+  <div *ngIf="result.Form == 'MS_PRO_Pain'">
+  	<label >Pain</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>		
+  </div>
+
+  <div *ngIf="result.Form == 'MS_PRO_Bladder'">
+    <label >Bladder</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>    
+  </div>
+
+  <div *ngIf="result.Form == 'MS_PRO_Depression'">
+  	<label >Depression</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>		
+  </div>
+ <div *ngIf="result.Form == 'MS_PRO_Cognition'">
+    <label >Cognition</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>    
+  </div>
+  <div *ngIf="result.Form == 'MS_PRO_SRA'">
+  	<label >Social</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>		
+  </div>
+  <div *ngIf="result.Form == 'MS_PRO_Mobility'">
+    <label >Mobility</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>   
+  </div>
+  -->
+
+</div>
+
+    <div *ngIf="greaterThan(2)">
+    <div style="display: block">
+      <canvas id="myChartCanvas2" baseChart
+        [datasets]="radarChartData2"
+        [options]="radarChartOptions2"
+        [labels]="radarChartLabels2"
+        [type]="'radar'">
+      </canvas>
+    </div>
+  </div>
+
+    <div type="labels" *ngFor="let result of results">
+
+      <div *ngIf="result.Form == 'MS_PRO_Sleep'">
+        <label >Sleep</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>    
+      </div>
+
+      <div *ngIf="result.Form == 'MS_PRO_UpperExtremity'">
+        <label >Upper Extremity</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>    
+      </div>
+
+      <div *ngIf="result.Form == 'MS_PRO_Spasticity'">
+        <label >Spasticity</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>   
+      </div>
+
+      <div *ngIf="result.Form == 'MS_PRO_Anxiety'">
+        <label >Anxiety</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>    
+      </div>
+
+      <div *ngIf="result.Form == 'MS_PRO_SexualFunction'">
+        <label >Sexual Function</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>    
+      </div>
+
+      <div *ngIf="result.Form == 'MS_PRO_Bowel'">
+        <label >Bowel</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>    
+      </div>
+
+      <div *ngIf="result.Form == 'MS_PRO_Vision'">
+        <label >Vision</label>  : <label *ngIf="!isNaN(result.Theta)">{{result.Theta}} +/- {{result.StdError}}</label><label *ngIf="isNaN(result.Theta)">No score available</label>   
+      </div>
+
+    </div>
+
+</div>
+</div>
+</div>
