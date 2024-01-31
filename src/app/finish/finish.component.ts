@@ -26,16 +26,14 @@ export class FinishComponent implements OnInit {
 		isNaN: Function = Number.isNaN;
 		public optionalPROs = 0;
 
-
 		public greaterThan(num: number) {
-
 			// console.log("what is optionalPROs " + this.optionalPROs);
 		  return (this.optionalPROs > num);
 		}
 
- public radarChartOptions: ChartConfiguration<'radar'>['options'] = {
-    responsive: true
-  };
+		public radarChartOptions: ChartConfiguration<'radar'>['options'] = {
+		  responsive: true
+		};
 
 public radarChartOptions2: ChartConfiguration<'radar'>['options'] = {
     responsive: true
@@ -88,6 +86,20 @@ public radarChartOptions2: ChartConfiguration<'radar'>['options'] = {
 	var myData2 = new Array();
 
 	var standardPROs = 0;
+
+/*
+  		let _canvas = <HTMLCanvasElement>document.getElementById('myChartCanvas');
+  		if(_canvas != null){
+
+					let ctx = _canvas.getContext("2d");
+					if(ctx != null){
+						ctx.fillStyle = "white";
+						ctx.fillRect(0, 0, _canvas.width, _canvas.height);
+						console.log("we are here");
+				  }
+			}
+*/
+
 
 
 	let cQOL = this.results.filter((a) => a.Form  === 'MS_PRO_QOL');
@@ -271,52 +283,64 @@ public radarChartOptions2: ChartConfiguration<'radar'>['options'] = {
 		}
 
 
-		domToImage.toPng(this.dataToExport.nativeElement, {width: width,height: height}).then(result => 
+		//domToImage.toPng(this.dataToExport.nativeElement, {width: width,height: height}).then(result => 
+		domToImage.toJpeg(this.dataToExport.nativeElement, {quality: 0.95}).then(result => 
 		{
 
-			let jsPdfOptions = {
-				orientation: orientation,
-				unit: imageUnit,
-				format: [width + 50, height + 220]
-			};
-		
-			// const pdf = new jsPDF(jsPdfOptions);
-			const pdf = new jsPDF();
-			
-			pdf.setFontSize(48);
-			pdf.setTextColor('#2585fe');
-			// pdf.text(this.pdfName.value ? this.pdfName.value.toUpperCase() : 'Untitled dashboard'.toUpperCase(), 25, 75);
-			pdf.text("MS PRO", 25, 75);
-			pdf.setFontSize(24);
-			pdf.setTextColor('#131523');
-			pdf.text('MS PRO Report: ', 25, 115);
-			//pdf.addImage(result, 'PNG', 25, 185, width, height);
 
   		let canvas = <HTMLCanvasElement>document.getElementById('myChartCanvas');
   		if(canvas != null){
-				let canvasUrl = canvas.toDataURL("image/jpeg", 0.5);
-				//console.log(canvasUrl);
-
-
-				this.acService.saveImage(canvasUrl).subscribe(
-					data => { console.log(data);}
-				);
-
-
-
-				pdf.addImage(canvas, 'JPEG', 25, 185, width, height);
+				let ctx = canvas.getContext("2d");
+				if(ctx != null){
+					ctx.globalCompositeOperation = 'destination-over'
+					ctx.fillStyle = "white";
+					ctx.fillRect(0, 0, canvas.width, canvas.height);
+			  }
+				let canvasUrl = canvas.toDataURL("image/jpeg", 1.0);
+				//let canvasUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
 			}
-/*
-  		let canvas2 = <HTMLCanvasElement>document.getElementById('myChartCanvas2');
+
+			let canvas2 = <HTMLCanvasElement>document.getElementById('myChartCanvas2');
   		if(canvas2 != null){
-				let canvasUrl2 = canvas2.toDataURL("image/jpeg", 0.5);
-				//console.log(canvasUrl2);
-				pdf.addImage(canvasUrl2, 'jpeg"', height + 50, 185, width, height);
-			}	
-*/
-			pdf.save('file_name'+ '.pdf');
-					
-		}
+ 				let ctx2 = canvas2.getContext("2d");
+				if(ctx2 != null){
+					ctx2.globalCompositeOperation = 'destination-over'
+					ctx2.fillStyle = "white";
+					ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+			  } 			
+				let canvasUrl2 = canvas2.toDataURL("image/jpeg", 1.0);
+				//let canvasUrl2 = canvas2.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+			}
+
+
+
+			let pdfWidth = canvas.width;
+			let pdfHeight = canvas.height;
+			if(canvas2 != null){
+					pdfWidth =  pdfWidth + canvas2.width;
+					pdfHeight = pdfHeight  + canvas2.height;
+			}
+
+	
+  		const pdf = new jsPDF({
+        orientation: 'p', // landscape
+        unit: 'pt', // points, pixels won't work properly
+        format: [pdfWidth + 50 , pdfHeight + 200] // set needed dimensions for any element
+  		});
+
+  		pdf.addImage(canvas, 'jpeg', 25, 25, canvas.width, canvas.height);
+			if(canvas2 != null){
+  			pdf.addImage(canvas2, 'jpeg', 25, canvas.height + 50, canvas2.width, canvas2.height);
+  		}
+			//pdf.save('file_name'+ '.pdf');
+			//console.log(pdf.output('blob'));
+			this.acService.saveImage(pdf.output('datauristring')).subscribe(
+					data => { 
+						console.log(data);
+					}
+			);
+				
+			}
 
 	).catch(error => { console.log("error occurred in generating pdf")});
 	

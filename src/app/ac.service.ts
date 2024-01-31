@@ -13,6 +13,9 @@ import { Form } from './form';
     headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded','Accept':'application/json','Authorization': environment.authentication}) 
   };
 
+  const httpOptions2 = {
+    headers: new HttpHeaders({ 'Content-Type': 'text/plain'}) 
+  };
   const BatteryOID = "1A3C00D7-94A3-4634-AEAC-BEB14EF3369F"; //MS-PRO
 
 @Injectable()
@@ -22,8 +25,9 @@ export class ACService {
 
 
 	saveImage(data: string): Observable<any>{
-		console.log(data);
-		    return this.http.post<any>(environment.server,data).pipe(
+	
+		
+		    return this.http.post<any>(environment.server,data,httpOptions2).pipe(
 		    map( (res: any) => {
 		    	return res;
 		    }
